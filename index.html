@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI with Purpose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --midnight: #0D1B2A;
+    --midnight-2: #132030;
+    --citrus: #E9C46A;
+    --citrus-dark: #C4933A;
+    --slate: #264653;
+    --ivory: #F8F6F0;
+    --muted: #7A9BB0;
+    --body: #4A6070;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--ivory); color: var(--midnight); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(13,27,42,0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(233,196,106,0.12);
+  }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.04em; color: var(--citrus); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { font-size: 13px; font-weight: 400; letter-spacing: 0.06em; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--citrus); }
+
+  .hero { min-height: 100vh; background: var(--midnight); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+  .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 140px 64px 120px; position: relative; z-index: 2; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(233,196,106,0.12); border: 1px solid rgba(233,196,106,0.3); color: var(--citrus); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 16px; border-radius: 100px; margin-bottom: 36px; width: fit-content; animation: fadeUp 0.7s ease both; }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--citrus); }
+  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: 62px; font-weight: 300; line-height: 1.1; color: var(--ivory); margin-bottom: 28px; animation: fadeUp 0.7s 0.1s ease both; }
+  .hero h1 em { font-style: italic; color: var(--citrus); }
+  .hero-sub { font-size: 15px; font-weight: 300; line-height: 1.8; color: var(--muted); max-width: 440px; margin-bottom: 48px; animation: fadeUp 0.7s 0.2s ease both; }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.7s 0.3s ease both; }
+  .btn-cta { background: var(--citrus); color: var(--midnight); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; padding: 14px 32px; border-radius: 4px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; display: inline-block; }
+  .btn-cta:hover { background: #f0ce80; transform: translateY(-2px); }
+  .btn-ghost { background: transparent; color: var(--ivory); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 0.04em; padding: 14px 32px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.18); cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-block; }
+  .btn-ghost:hover { border-color: var(--citrus); color: var(--citrus); }
+  .hero-right { position: relative; overflow: hidden; animation: fadeIn 1.2s 0.2s ease both; }
+  .hero-right img { width: 100%; height: 100%; object-fit: cover; object-position: center; filter: brightness(0.65) saturate(0.85); }
+  .hero-right::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--midnight) 0%, transparent 40%); }
+  .hero-stat-bar { position: absolute; bottom: 0; left: 0; right: 0; display: flex; border-top: 1px solid rgba(233,196,106,0.12); z-index: 3; animation: fadeUp 0.7s 0.5s ease both; }
+  .hero-stat { flex: 1; padding: 24px 32px; border-right: 1px solid rgba(233,196,106,0.08); }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--citrus); line-height: 1; }
+  .hero-stat-label { font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: 0.06em; margin-top: 4px; text-transform: uppercase; }
+
+  .marquee-wrap { background: var(--citrus); overflow: hidden; padding: 14px 0; }
+  .marquee-track { display: flex; animation: marquee 24s linear infinite; white-space: nowrap; }
+  .marquee-item { display: inline-flex; align-items: center; gap: 20px; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--midnight); padding: 0 32px; }
+  .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--midnight); opacity: 0.4; flex-shrink: 0; }
+
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--citrus-dark); margin-bottom: 16px; }
+
+  .graphic-placeholder { background: #F0EDE4; border: 2px dashed rgba(196,147,58,0.35); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--citrus-dark); font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; text-align: center; padding: 32px; line-height: 1.5; }
+  .graphic-placeholder-dark { background: rgba(38,70,83,0.35); border: 2px dashed rgba(233,196,106,0.2); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; text-align: center; padding: 24px; line-height: 1.5; }
+
+  .what-section { background: var(--ivory); padding: 120px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .what-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; line-height: 1.2; color: var(--midnight); margin-bottom: 24px; }
+  .what-section p { font-size: 15px; line-height: 1.8; color: var(--body); margin-bottom: 16px; }
+  .pillars { display: flex; flex-direction: column; gap: 1px; }
+  .pillar { background: white; border: 1px solid rgba(13,27,42,0.08); padding: 22px 24px; transition: border-color 0.2s, transform 0.2s; display: flex; gap: 16px; align-items: flex-start; }
+  .pillar:first-child { border-radius: 8px 8px 0 0; }
+  .pillar:last-child { border-radius: 0 0 8px 8px; }
+  .pillar:hover { border-color: var(--citrus); transform: translateX(4px); }
+  .pillar-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--midnight); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .pillar-icon svg { width: 15px; height: 15px; }
+  .pillar h3 { font-size: 14px; font-weight: 500; color: var(--midnight); margin-bottom: 4px; }
+  .pillar p { font-size: 13px; line-height: 1.6; color: var(--body); }
+
+  .work-section { background: var(--midnight); padding: 120px 64px; }
+  .work-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 64px; }
+  .work-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--ivory); line-height: 1.2; }
+  .work-header p { font-size: 14px; color: var(--muted); max-width: 300px; line-height: 1.7; text-align: right; }
+  .project-card { background: var(--midnight-2); border: 1px solid rgba(233,196,106,0.12); border-radius: 8px; display: grid; grid-template-columns: 1fr 2fr; overflow: hidden; transition: border-color 0.3s; }
+  .project-card:hover { border-color: rgba(233,196,106,0.35); }
+  .project-left { background: var(--slate); padding: 48px 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; }
+  .project-cause { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--citrus); margin-bottom: 12px; }
+  .project-left h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--ivory); line-height: 1.3; }
+  .project-graphic { height: 110px; border-radius: 8px; }
+  .project-location { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .project-location::before { content: '→'; color: var(--citrus); }
+  .project-right { padding: 48px; }
+  .project-block { margin-bottom: 24px; }
+  .project-block-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--citrus-dark); margin-bottom: 8px; }
+  .project-block p { font-size: 14px; line-height: 1.75; color: var(--muted); }
+  .project-result-bar { margin-top: 28px; padding-top: 24px; border-top: 1px solid rgba(233,196,106,0.12); display: flex; align-items: center; gap: 16px; }
+  .result-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--citrus); white-space: nowrap; }
+  .result-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 300; color: var(--ivory); line-height: 1.4; }
+
+  .how-section { background: var(--ivory); padding: 120px 64px; }
+  .how-header { margin-bottom: 56px; max-width: 560px; }
+  .how-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--midnight); line-height: 1.2; margin-top: 12px; }
+  .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .how-steps { display: flex; flex-direction: column; border-top: 1px solid rgba(13,27,42,0.1); }
+  .how-step { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: start; padding: 24px 0; border-bottom: 1px solid rgba(13,27,42,0.06); transition: padding-left 0.2s; }
+  .how-step:hover { padding-left: 6px; }
+  .how-step:hover .how-step-num { color: var(--citrus-dark); }
+  .how-step-num { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; color: rgba(13,27,42,0.18); line-height: 1; transition: color 0.2s; padding-top: 4px; }
+  .how-step-icon { width: 30px; height: 30px; border-radius: 7px; background: var(--midnight); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .how-step-icon svg { width: 13px; height: 13px; }
+  .how-step h3 { font-size: 14px; font-weight: 500; color: var(--midnight); margin-bottom: 5px; }
+  .how-step p { font-size: 13px; line-height: 1.7; color: var(--body); }
+  .how-graphic { min-height: 460px; border-radius: 12px; }
+
+  .why-section { background: var(--midnight); padding: 120px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .why-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; line-height: 1.2; color: var(--ivory); margin-bottom: 24px; }
+  .why-section p { font-size: 15px; line-height: 1.8; color: var(--muted); margin-bottom: 16px; }
+  .quote-pull { border-left: 2px solid var(--citrus); padding: 20px 24px; background: rgba(233,196,106,0.05); border-radius: 0 8px 8px 0; margin-top: 24px; }
+  .quote-pull blockquote { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 300; font-style: italic; color: var(--ivory); line-height: 1.5; margin-bottom: 8px; }
+  .quote-pull cite { font-size: 12px; color: var(--muted); font-style: normal; }
+  .why-right { display: flex; flex-direction: column; gap: 16px; }
+  .why-point { display: flex; gap: 16px; align-items: flex-start; padding: 18px 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(233,196,106,0.08); border-radius: 8px; transition: border-color 0.2s, transform 0.2s; }
+  .why-point:hover { border-color: rgba(233,196,106,0.25); transform: translateX(4px); }
+  .why-point-icon { width: 38px; height: 38px; flex-shrink: 0; background: rgba(233,196,106,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .why-point-icon svg { width: 16px; height: 16px; }
+  .why-point h4 { font-size: 13px; font-weight: 500; color: var(--ivory); margin-bottom: 4px; }
+  .why-point p { font-size: 13px; line-height: 1.7; color: var(--muted); }
+
+  .cta-section { background: var(--midnight); padding: 100px 64px; text-align: center; border-top: 1px solid rgba(233,196,106,0.1); }
+  .cta-inner { max-width: 620px; margin: 0 auto; }
+  .cta-icon { width: 52px; height: 52px; background: rgba(233,196,106,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; }
+  .cta-icon svg { width: 22px; height: 22px; }
+  .cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 46px; font-weight: 300; color: var(--ivory); line-height: 1.2; margin-bottom: 20px; }
+  .cta-section h2 em { font-style: italic; color: var(--citrus); }
+  .cta-section p { font-size: 15px; color: var(--muted); max-width: 460px; margin: 0 auto 40px; line-height: 1.8; }
+
+  footer { background: #080F16; padding: 28px 64px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(233,196,106,0.08); }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--citrus); font-weight: 400; }
+  footer span { font-size: 12px; color: #3A5060; letter-spacing: 0.04em; }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">AI with Purpose</div>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Our work</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">At no cost</div>
+    <h1>We build AI tools<br>for nonprofits.<br><em>At no cost.</em></h1>
+    <p class="hero-sub">From menstrual health programs in rural communities to food banks to housing organizations — we work with nonprofits to understand their operational challenges and build technology that helps.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-cta">Get in touch</a>
+      <a href="#" class="btn-ghost">See our work</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="1773519641984_image.png" alt="Children playing and laughing together">
+  </div>
+  <div class="hero-stat-bar">
+    <div class="hero-stat">
+      <div class="hero-stat-num">100%</div>
+      <div class="hero-stat-label">Free, always</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">Custom</div>
+      <div class="hero-stat-label">Built for your org</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">Real</div>
+      <div class="hero-stat-label">Outcomes, not promises</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Maternal health <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Menstrual health <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Education <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Food security <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mental health <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Climate <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Housing <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Always free <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Maternal health <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Menstrual health <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Education <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Food security <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mental health <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Climate <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Housing <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Always free <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<section class="what-section">
+  <div class="reveal-left">
+    <div class="section-label">What we do</div>
+    <h2>We build AI that fits how your organization actually works</h2>
+    <p>We embed with your team, learn how your organization operates, and build AI tools tailored to your specific needs. Sometimes that means automating a process that's consuming too much staff time. Sometimes it means making sense of data that exists but isn't being used. The scope depends on what will make the most meaningful difference.</p>
+    <p>We don't arrive with a predetermined solution. We start by listening.</p>
+  </div>
+  <div class="pillars reveal-right">
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div>
+        <h3>We start by listening</h3>
+        <p>A conversation about your organization, how your team works, and where things are breaking down.</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div>
+        <h3>We build around your workflow</h3>
+        <p>Whatever we build is designed specifically for how your organization operates — not adapted from something generic.</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <h3>Your team gets capacity back</h3>
+        <p>Less time on administration. More time on the work your organization exists to do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="work-section">
+  <div class="work-header reveal">
+    <h2>Projects we've<br>worked on</h2>
+    <p>We've worked with organizations in maternal health, education, and beyond. Each project is built from the ground up.</p>
+  </div>
+  <div class="project-card reveal">
+    <div class="project-left">
+      <div>
+        <div class="project-cause">Maternal health</div>
+        <h3>Risk prediction for frontline health workers</h3>
+      </div>
+      <div class="project-graphic graphic-placeholder-dark">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        Add a screenshot or graphic of the tool here
+      </div>
+      <div class="project-location">Rural India</div>
+    </div>
+    <div class="project-right">
+      <div class="project-block">
+        <div class="project-block-label">The challenge</div>
+        <p>Community health workers in rural India were managing patient care largely through paper records and experience. Without a systematic way to assess risk across their caseload, identifying which patients needed urgent attention was difficult — and the consequences of missing someone were serious.</p>
+      </div>
+      <div class="project-block">
+        <div class="project-block-label">What we built</div>
+        <p>A risk prediction tool that draws on data the health workers were already collecting — blood pressure, blood glucose, pregnancy history, and age — and produces a real-time risk assessment for each patient. Designed to run on basic devices and fit naturally into their existing workflow.</p>
+      </div>
+      <div class="project-result-bar">
+        <div class="result-label">Outcome</div>
+        <div class="result-text">Frontline workers can now make better-informed decisions about who needs attention first.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how-section">
+  <div class="how-header reveal">
+    <div class="section-label">How it works</div>
+    <h2>From first conversation to finished tool</h2>
+  </div>
+  <div class="how-grid">
+    <div class="how-steps reveal-left">
+      <div class="how-step">
+        <div class="how-step-num">01</div>
+        <div class="how-step-content">
+          <div class="how-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>You reach out</h3>
+          <p>A short form. Tell us about your organization and what you're dealing with.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">02</div>
+        <div class="how-step-content">
+          <div class="how-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>We have a conversation</h3>
+          <p>If there's something useful we can build, we set up a call. We ask a lot of questions before touching anything technical.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">03</div>
+        <div class="how-step-content">
+          <div class="how-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+          <h3>We define the problem together</h3>
+          <p>We don't start building until we're both clear on what we're solving and why. This sometimes takes more than one conversation.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">04</div>
+        <div class="how-step-content">
+          <div class="how-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <h3>We build and test with you</h3>
+          <p>We work iteratively and check in with your team throughout. You're involved from the start, not handed something at the end.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">05</div>
+        <div class="how-step-content">
+          <div class="how-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h3>The tool is yours</h3>
+          <p>We hand it over, make sure your team is comfortable using it, and stay available if anything needs adjusting.</p>
+        </div>
+      </div>
+    </div>
+    <div class="how-graphic graphic-placeholder reveal-right">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#C4933A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Add an illustration or process diagram here
+    </div>
+  </div>
+</section>
+
+<section class="why-section">
+  <div class="reveal-left">
+    <div class="section-label" style="color:rgba(233,196,106,0.6);">Why free</div>
+    <h2>Most AI tools aren't built with nonprofits in mind</h2>
+    <p>Most sophisticated AI tools are built for organizations with significant technology budgets. Nonprofits are frequently left out of that picture. We don't think that's acceptable, so we don't charge.</p>
+    <p>There are no fees, no licensing costs, and no obligations.</p>
+    <div class="quote-pull">
+      <blockquote>"The organizations doing the most important work are usually the ones with the least resources for this kind of thing."</blockquote>
+      <cite>— Founder, AI with Purpose</cite>
+    </div>
+  </div>
+  <div class="why-right reveal-right">
+    <div class="why-point">
+      <div class="why-point-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div>
+        <h4>Built around your workflows</h4>
+        <p>We don't arrive with a product to sell. Whatever we build is designed from scratch around how your organization operates.</p>
+      </div>
+    </div>
+    <div class="why-point">
+      <div class="why-point-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div>
+        <h4>Capacity where it's needed</h4>
+        <p>The goal is to reduce the administrative load on your team so they can spend more time on the work that actually matters.</p>
+      </div>
+    </div>
+    <div class="why-point">
+      <div class="why-point-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <h4>A small number of projects at a time</h4>
+        <p>We maintain a limited active project list so we can give each engagement the attention it warrants.</p>
+      </div>
+    </div>
+    <div class="why-point">
+      <div class="why-point-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <h4>No obligations</h4>
+        <p>If we're not the right fit for your organization right now, we'll say so directly. There's no pressure in either direction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <div class="cta-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <h2>If you'd like to explore<br>whether this could <em>help —</em></h2>
+    <p>We work with organizations across health, education, food security, mental health, climate, and housing. Fill out the form and tell us what you're working on.</p>
+    <a href="#" class="btn-cta">Get in touch</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">AI with Purpose</div>
+  <span>AI with Purpose · We build AI for nonprofits, at no cost.</span>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el, i) => {
+    const parent = el.parentElement;
+    const siblings = parent.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    if (siblings.length > 1) {
+      const idx = Array.from(siblings).indexOf(el);
+      el.style.transitionDelay = (idx * 0.12) + 's';
+    }
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
